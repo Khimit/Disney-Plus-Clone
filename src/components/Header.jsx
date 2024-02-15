@@ -5,21 +5,24 @@ import watchlisticon from "../images/watchlist-icon.svg";
 import originalicon from "../images/original-icon.svg";
 import moviesicon from "../images/movie-icon.svg";
 import seriescon from "../images/series-icon.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, provider } from "../firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserData } from "../features/user/userSlice";
+import { useEffect } from "react";
+import { useCallback } from "react";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userName = useSelector((state) => state.user.userName);
   const profilePhoto = useSelector((state) => state.user.profilePhoto);
   const userEmail = useSelector((state) => state.user.userEmail);
   console.log(userName);
   console.log(profilePhoto);
   console.log(userEmail);
-
-  const setUser = (displayName, email, photoURL) => {
+  
+  const setUser = useCallback((displayName, email, photoURL) => {
     const userdata = {
       userName: displayName,
       profilePhoto: photoURL,
@@ -27,7 +30,19 @@ const Header = () => {
     };
     dispatch(setUserData(userdata));
     console.log(userdata);
-  };
+    },[]);
+
+    
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        const { displayName, email, photoURL } = user;
+        setUser(displayName, email, photoURL);
+        navigate("/home");
+      }
+    });
+  }, [setUser,navigate]);
+
 
   const handleAuthClick = () => {
     auth
@@ -50,44 +65,47 @@ const Header = () => {
         <img className="h-16 w-40 m-4 p-1" src={logo} alt="" />
         <div className="text-white flex-grow">
           <ul className="flex items-center gap-3">
-            <li className="mt-9 text-lg tracking-widest">
-              <Link
-                to="/"
-                className="flex items-center no-underline hover:underline"
-              >
+            <li className="mt-9 text-lg tracking-widest group">
+              <Link to="/home" className="flex items-center">
                 <img className="h-6 w-8" src={homeicon} alt="" />
                 HOME
               </Link>
+              <div className="bg-amber-500 h-[2px] ml-2 mt-1 w-0 group-hover:w-full transition-all duration-500"></div>
             </li>
-            <li className="mt-9 text-lg tracking-widest">
+            <li className="mt-9 text-lg tracking-widest group">
               <Link to="/" className="flex items-center">
                 <img className="h-6 w-8" src={searchicon} alt="" />
                 SEARCH
               </Link>
+              <div className="bg-amber-500 h-[2px] ml-2 mt-1 w-0 group-hover:w-full transition-all duration-500"></div>
             </li>
-            <li className="mt-9 text-lg tracking-widest">
+            <li className="mt-9 text-lg tracking-widest group">
               <Link to="/" className="flex items-center">
                 <img className="h-6 w-8" src={watchlisticon} alt="" />
                 WATCHLIST
               </Link>
+              <div className="bg-amber-500 h-[2px] ml-2 mt-1 w-0 group-hover:w-full transition-all duration-500"></div>
             </li>
-            <li className="mt-9 text-lg tracking-widest">
+            <li className="mt-9 text-lg tracking-widest group">
               <Link to="/" className="flex items-center">
                 <img className="h-6 w-8" src={originalicon} alt="" />
                 ORIGINALS
               </Link>
+              <div className="bg-amber-500 h-[2px] ml-2 mt-1 w-0 group-hover:w-full transition-all duration-500"></div>
             </li>
-            <li className="mt-9 text-lg tracking-widest">
+            <li className="mt-9 text-lg tracking-widest group">
               <Link to="/" className="flex items-center">
                 <img className="h-6 w-8" src={moviesicon} alt="" />
                 MOVIES
               </Link>
+              <div className="bg-amber-500 h-[2px] ml-2 mt-1 w-0 group-hover:w-full transition-all duration-500"></div>
             </li>
-            <li className="mt-9 text-lg tracking-widest">
+            <li className="mt-9 text-lg tracking-widest group">
               <Link to="/" className="flex items-center">
                 <img className="h-6 w-8" src={seriescon} alt="" />
                 SERIES
               </Link>
+              <div className="bg-amber-500 h-[2px] ml-2 mt-1 w-0 group-hover:w-full transition-all duration-500"></div>
             </li>
           </ul>
         </div>
