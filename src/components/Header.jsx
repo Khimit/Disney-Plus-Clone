@@ -8,8 +8,8 @@ import seriescon from "../images/series-icon.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, provider } from "../firebase";
 import { useSelector, useDispatch } from "react-redux";
-import { setUserData } from "../features/user/userSlice";
-import { useEffect } from "react";
+import { removeUserData, setUserData } from "../features/user/userSlice";
+import { useEffect, useState, useRef } from "react";
 import { useCallback } from "react";
 
 const Header = () => {
@@ -21,7 +21,9 @@ const Header = () => {
   console.log(userName);
   console.log(profilePhoto);
   console.log(userEmail);
-  
+  const [signOutBtnFlag, setSignOutBtnFlag] = useState(false);
+  const elementRef = useRef(null);
+
   const setUser = useCallback((displayName, email, photoURL) => {
     const userdata = {
       userName: displayName,
@@ -30,9 +32,8 @@ const Header = () => {
     };
     dispatch(setUserData(userdata));
     console.log(userdata);
-    },[]);
+  }, []);
 
-    
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
@@ -41,22 +42,52 @@ const Header = () => {
         navigate("/home");
       }
     });
-  }, [setUser,navigate]);
-
+  }, [setUser, navigate]);
 
   const handleAuthClick = () => {
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        const { displayName, email, photoURL } = result.user.multiFactor.user;
-        console.log(displayName);
-        console.log(email);
-        console.log(photoURL);
-        setUser(displayName, email, photoURL);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+    console.log("sign out clicked");
+    if (!userName) {
+      auth
+        .signInWithPopup(provider)
+        .then((result) => {
+          const { displayName, email, photoURL } = result.user.multiFactor.user;
+          console.log(displayName);
+          console.log(email);
+          console.log(photoURL);
+          setUser(displayName, email, photoURL);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    } else if (userName) {
+      auth
+        .signOut()
+        .then(() => {
+          dispatch(removeUserData());
+          navigate("/");
+        })
+        .catch((error) => alert(error.message));
+    }
+  };
+
+  useEffect(() => {
+    // Function to handle click events
+    function handleClickOutside(event) {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setTimeout(() => setSignOutBtnFlag(false), 100);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup function to remove the event listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const openSignOutBtn = () => {
+    setSignOutBtnFlag(true);
   };
 
   return userName ? (
@@ -109,11 +140,24 @@ const Header = () => {
             </li>
           </ul>
         </div>
-        <img
-          className="h-14 w-16 rounded-full m-5 p-1 cursor-pointer"
-          src={profilePhoto}
-          alt="userName"
-        />
+
+        <div>
+          <img
+            className="h-14 w-16 rounded-full m-5 p-1 cursor-pointer"
+            ref={elementRef}
+            src={profilePhoto}
+            alt="userName"
+            onClick={openSignOutBtn}
+          />
+          <div
+            className={`text-white bg-stone-500 rounded-full cursor-pointer tracking-wider font-semibold ${
+              !signOutBtnFlag ? "hidden" : ""
+            }`}
+            onClick={(event) => handleAuthClick(event)}
+          >
+            <h1 className="text-center text-xl p-1">Sign-Out</h1>
+          </div>
+        </div>
       </div>
     </>
   ) : (

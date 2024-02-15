@@ -15,9 +15,14 @@ export const userSlice = createSlice({
             state.profilePhoto = action.payload.profilePhoto;
             state.userEmail = action.payload.userEmail;
         },
+        removeUserData: (state) => {
+            state.userName = "";
+            state.userEmail = "";
+            state.profilePhoto = "";
+        }
     }
 });
 
-export const { setUserData } = userSlice.actions;
+export const { setUserData, removeUserData } = userSlice.actions;
 export default userSlice.reducer;
 
