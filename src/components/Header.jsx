@@ -92,7 +92,7 @@ const Header = () => {
 
   return userName ? (
     <>
-      <div className="w-full h-[90px] bg-[#090b13] fixed flex justify-between">
+      <div className="w-full h-[90px] bg-[#090b13] fixed flex justify-between z-[1000]">
         <img className="h-16 w-40 m-4 p-1" src={logo} alt="" />
         <div className="text-white flex-grow">
           <ul className="flex items-center gap-3">
