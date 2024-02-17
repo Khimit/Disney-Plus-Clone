@@ -18,7 +18,9 @@ const Home = () => {
     >
       <Carousel />
       <Viewers />
-      <Recommends/>
+      <Recommends compName="Recommanded For You" page="1" />
+      <Recommends compName="Trending" page="2" />
+      <Recommends compName="New Releases" page="3" />
     </div>
   );
 };
