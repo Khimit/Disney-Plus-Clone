@@ -5,13 +5,15 @@ import "./Carousel.css";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import.meta.env.VITE_API_KEY;
 
-const ChildCarousel = ({page}) => {
+const ChildCarousel = ({ page }) => {
   const [movieData, setMovieData] = useState([]);
   const API_KEY = import.meta.env.VITE_API_KEY;
   const IMG_BASE_URL = import.meta.env.VITE_IMG_BASE_URL;
   const MOVIE_BASE_URL = import.meta.env.VITE_MOVIE_BASE_URL;
+  
 
   let settings = {
     dots: false,
@@ -43,6 +45,7 @@ const ChildCarousel = ({page}) => {
         {movieData.map((data, key) => {
           return (
             <div key={key} className="h-72 p-2">
+              <Link to={`/products/${data.id}`}>
               <img
                 className="border-[2px] border-gray-600
             rounded-lg hover:scale-110 transition-all duration-300
@@ -51,6 +54,7 @@ const ChildCarousel = ({page}) => {
                 src={`${IMG_BASE_URL}${data.poster_path}`}
                 alt="Slider Image 1"
               />
+             </Link> 
             </div>
           );
         })}

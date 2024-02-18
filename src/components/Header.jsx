@@ -18,9 +18,7 @@ const Header = () => {
   const userName = useSelector((state) => state.user.userName);
   const profilePhoto = useSelector((state) => state.user.profilePhoto);
   const userEmail = useSelector((state) => state.user.userEmail);
-  console.log(userName);
-  console.log(profilePhoto);
-  console.log(userEmail);
+
   const [signOutBtnFlag, setSignOutBtnFlag] = useState(false);
   const elementRef = useRef(null);
 
