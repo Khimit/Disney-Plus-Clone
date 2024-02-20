@@ -11,92 +11,33 @@ import viewerVideo5 from "../videos/1608229455-star-wars.mp4";
 
 const Viewers = () => {
   return (
-    <div className="grid grid-cols-5 m-10 gap-5">
-      <div
-        className="border-[2px] border-gray-600
-            rounded-lg hover:scale-110 transition-all duration-300
-            ease-in-out cursor-pointer relative shadow-xl 
-            shadow-gray-800"
-      >
-        <img src={viewerImg1} alt="" className="w-full z-[1] opacity-100" />
-        <video
-          src={viewerVideo1}
-          autoPlay
-          loop
-          playsInline
-          muted
-          className="absolute z-0  top-0 rounded-md 
-            opacity-0 hover:opacity-50"
-        ></video>
-      </div>
-      <div
-        className="border-[2px] border-gray-600
-            rounded-lg hover:scale-110 transition-all duration-300
-            ease-in-out cursor-pointer relative shadow-xl 
-            shadow-gray-800"
-      >
-        <img src={viewerImg2} alt="" className="w-full z-[1] opacity-100" />
-        <video
-          src={viewerVideo2}
-          autoPlay
-          loop
-          playsInline
-          muted
-          className="absolute z-0  top-0 rounded-md 
-            opacity-0 hover:opacity-50"
-        ></video>
-      </div>
-      <div
-        className="border-[2px] border-gray-600
-            rounded-lg hover:scale-110 transition-all duration-300
-            ease-in-out cursor-pointer relative shadow-xl 
-            shadow-gray-800"
-      >
-        <img src={viewerImg3} alt="" className="w-full z-[1] opacity-100" />
-        <video
-          src={viewerVideo3}
-          autoPlay
-          loop
-          playsInline
-          muted
-          className="absolute z-0  top-0 rounded-md 
-            opacity-0 hover:opacity-50"
-        ></video>
-      </div>
-      <div
-        className="border-[2px] border-gray-600
-            rounded-lg hover:scale-110 transition-all duration-300
-            ease-in-out cursor-pointer relative shadow-xl 
-            shadow-gray-800"
-      >
-        <img src={viewerImg4} alt="" className="w-full z-[1] opacity-100" />
-        <video
-          src={viewerVideo4}
-          autoPlay
-          loop
-          playsInline
-          muted
-          className="absolute z-0  top-0 rounded-md 
-            opacity-0 hover:opacity-50"
-        ></video>
-      </div>
-      <div
-        className="border-[2px] border-gray-600
-            rounded-lg hover:scale-110 transition-all duration-300
-            ease-in-out cursor-pointer relative shadow-xl 
-            shadow-gray-800"
-      >
-        <img src={viewerImg5} alt="" className="w-full z-[1] opacity-100" />
-        <video
-          src={viewerVideo5}
-          autoPlay
-          loop
-          playsInline
-          muted
-          className="absolute z-0  top-0 rounded-md 
-            opacity-0 hover:opacity-50"
-        ></video>
-      </div>
+    <div className=" mt-10 grid m-5 gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {[viewerImg1, viewerImg2, viewerImg3, viewerImg4, viewerImg5].map(
+        (img, index) => (
+          <div
+            key={index}
+            className="border-2 border-gray-600 rounded-lg hover:scale-110 transition-all duration-300 ease-in-out cursor-pointer relative shadow-xl shadow-gray-800"
+          >
+            <img src={img} alt="" className="w-full z-10 opacity-100" />
+            <video
+              src={
+                [
+                  viewerVideo1,
+                  viewerVideo2,
+                  viewerVideo3,
+                  viewerVideo4,
+                  viewerVideo5,
+                ][index]
+              }
+              autoPlay
+              loop
+              playsInline
+              muted
+              className="absolute z-0 top-0 left-0 right-0 bottom-0 w-full h-full rounded-lg opacity-0 hover:opacity-50"
+            ></video>
+          </div>
+        )
+      )}
     </div>
   );
 };
