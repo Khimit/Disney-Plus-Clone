@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactPlayer from "react-player";
-import { useEffect, useState } from "react";
 import axios from "axios";
 
 const Watch = () => {
@@ -10,6 +10,7 @@ const Watch = () => {
   const [movieImg, setMovieImg] = useState("");
   const [movieName, setMovieName] = useState("");
   const [movieDescription, setMovieDescription] = useState("");
+  const [movieImgData, setMovieImgData] = useState("");
   const [movieReleaseDate, setMovieReleaseDate] = useState("");
   const [movieRuntime, setMovieRuntime] = useState("");
   const [showTrailer, setShowTrailer] = useState(false);
@@ -22,6 +23,7 @@ const Watch = () => {
           `https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&append_to_response=videos`
         );
         setMovieData(response.data.videos.results);
+        setMovieImgData(response.data.backdrop_path);
         setMovieImg(response.data.poster_path);
         setMovieName(response.data.title);
         setMovieDescription(response.data.overview);
@@ -40,52 +42,58 @@ const Watch = () => {
     navigate(-1);
   };
 
+  const handleWatchClick = () => {
+    setShowTrailer(true);
+  };
+
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-black">
+    <div
+      className="relative min-h-screen bg-cover bg-top bg-no-repeat"
+      style={{
+        backgroundImage: `url(https://image.tmdb.org/t/p/original${movieImgData})`,
+      }}
+    >
+      <div className="absolute inset-0 bg-black bg-opacity-70"></div>
       <button
         onClick={handleGoBack}
-        className="absolute top-4 left-4 z-20 text-white bg-gray-700 hover:bg-gray-900 font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out"
+        className="absolute top-4 left-4 z-30 text-white bg-gray-700 hover:bg-gray-900 font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out"
       >
         Go Back
       </button>
-      <div className="relative z-10 flex justify-center items-center h-full">
-        <div className="w-full max-w-6xl p-4 mx-auto flex flex-col md:flex-row">
-          <div className="md:w-1/3 flex justify-center md:justify-start mb-4 md:mb-0">
-            <img
-              src={`https://image.tmdb.org/t/p/w500${movieImg}`}
-              alt="Movie Poster"
-              className="max-h-[500px] w-auto shadow-lg rounded"
-            />
-          </div>
-          <div className="md:w-2/3 md:pl-8 flex flex-col justify-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-              {movieName}
-            </h1>
-            <p className="text-gray-400 mb-2">
-              {movieReleaseDate.slice(0, 4)} · {movieRuntime}
-            </p>
-            <p className="text-gray-300 text-sm mb-4">{movieDescription}</p>
+      <div className="relative z-20 p-4 flex flex-col md:flex-row items-center justify-center min-h-screen">
+        <img
+          src={`https://image.tmdb.org/t/p/w500${movieImg}`}
+          alt="Movie Poster"
+          className="max-h-[500px] w-auto rounded shadow-lg z-20"
+        />
+        <div className="text-white p-4 max-w-xl z-20">
+          <h1 className="text-3xl font-bold mb-2">{movieName}</h1>
+          <p className="mb-2">
+            {movieReleaseDate.slice(0, 4)} · {movieRuntime}
+          </p>
+          <p className="mb-4">{movieDescription}</p>
+          {movieData.length > 0 && (
             <button
               onClick={handleWatchClick}
-              className="self-start bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+              className="bg-blue-600 hover:bg-blue-700 font-semibold py-2 px-4 rounded"
             >
               Watch Trailer
             </button>
-          </div>
+          )}
         </div>
       </div>
-
       {showTrailer && movieData.length > 0 && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex justify-center items-center z-50">
-          <div className="p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-40 flex justify-center items-center">
+          <div
+            className="player-wrapper"
+            
+          >
             <ReactPlayer
               url={`https://www.youtube.com/watch?v=${movieData[0].key}`}
               controls={true}
               playing={true}
-              loop={true}
-              className="react-player"
-              width="100%"
-              height="100%"
+              width="80vw"
+              height="80vh"
             />
             <button
               onClick={() => setShowTrailer(false)}
@@ -98,10 +106,6 @@ const Watch = () => {
       )}
     </div>
   );
-
-  function handleWatchClick() {
-    setShowTrailer(true);
-  }
 };
 
 export default Watch;
